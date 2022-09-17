@@ -24,6 +24,31 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get(`/api/:date`,(req,res) =>{
+ 
+  let data=req.params.date;
+  const regex1=/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/;
+  const regex2=/[0-9]{10,13}/;
+
+  if(regex1.test(data)){
+    const date1 = new Date(data);
+    const UTC=date1.toUTCString();
+    const unix=date1.getTime();
+    res.status(200).json({"unix":`${unix}`,"utc":`${UTC}`})
+  }
+  else if(regex2.test(data)){
+    console.log(data)
+    if(data.length == 13)
+    { data/=1000;}
+    const date2= new Date(data*1000)
+    const UTC = date2.toUTCString();
+    res.status(200).json({"unix":`${data}`,"utc":`${UTC}`})
+  }
+  else{
+    res.status(400).json({"error":"invalid Date"})
+  }
+  
+})
 
 
 // listen for requests :)
